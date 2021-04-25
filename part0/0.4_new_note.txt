@@ -1,0 +1,45 @@
+note over browser
+user click save button
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over server:
+server push new note to the notes array and 
+reload the page for redirecting to a new URL
+end note
+
+server->browser: URL redirect
+
+note over browser:
+The reload causes three more HTTP requests:
+fetching the style sheet (main.css),
+the JavaScript code (main.js),
+and the raw data of the notes (data.json)
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+
+server->browser: text/html
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+
+server-->browser: main.css
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+
+server-->browser: main.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+
+server-->browser: [{ content: "it's easy", date: "2021-04-25" }, ...]
+
+note over browser:
+browser executes the event handler
+that renders a new note in the document
+end note

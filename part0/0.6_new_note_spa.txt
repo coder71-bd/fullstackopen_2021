@@ -1,0 +1,29 @@
+title 0.6: new note on spa
+
+note over browser:
+user click on the save button.
+Javascript code in spa.js prevent the default behaviour of handling form submit.
+The default method would send the data
+to the server and cause a new GET request
+end note
+
+note over browser:
+the evnt handler in spa.js does the followings:
+1. creates a new note
+2. adds it to the notes list
+3. rerenders the note list
+4. sends the new note to the server as JSON format. Example: 
+{
+  content: "create",
+  date: "2021-04-25T15:12:47.85Z"
+}
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server:
+server recieves the JSON data
+and adds it to the notes list on server
+end note
+
+server->browser: {"message":"note created"}

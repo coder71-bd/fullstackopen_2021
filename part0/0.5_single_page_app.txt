@@ -1,0 +1,36 @@
+title 0.5: spa
+
+note over browser:
+user request the URL from a browser
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+
+server->browser: text/html
+
+note over browser:
+links in the HTML code cause the browser
+to fetche spa.js and spa.css file
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+
+server->browser: spa.css
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+
+server->browser: spa.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+
+server->browser: array of notes
+
+note over browser: 
+browser starts executing the event handler
+that stringify the json data and display notes in browser
+end note
