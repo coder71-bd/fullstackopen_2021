@@ -3,4 +3,4 @@
 ## Full Stack Open 2021 Excercise Submissions
 
 - **Part 0: fundamentals of Web apps**
-  - [Web Sequence Diagrams](https://github.com/atkinsio/full-stack-open-2020/tree/master/part0)
+  - [Web Sequence Diagrams](https://github.com/coder71-bd/fullstackopen_2021/tree/main/part0)
