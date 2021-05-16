@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+const Button = ({handleClick, text}) =>  <button onClick={handleClick}>{text}</button>
 function App() {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -18,14 +18,25 @@ function App() {
     updateVotes[selected] += 1
     setUpdateVotes({...updateVotes})
   }
+  const dataArray = []
+  for(let key in updateVotes) {
+    dataArray.push(updateVotes[key])
+  }
+  const maxVote = Math.max(...dataArray)
+  const indexOfMaxVote = dataArray.indexOf(maxVote)
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
       <div>has {updateVotes[selected]} votes</div>
-      <button onClick={changeVotes}>vote</button>
-      <button onClick={changeIndex}>next anecdote</button>
+      <Button handleClick={changeVotes} text='vote' />
+      <Button handleClick={changeIndex} text='next anecdote' />
+      <h1>Anecdote with most votes</h1>
+      <div>{anecdotes[indexOfMaxVote]}</div>
+      <div>has {maxVote} votes</div>
     </div>
-  );
+  )
 }
 
 export default App;
