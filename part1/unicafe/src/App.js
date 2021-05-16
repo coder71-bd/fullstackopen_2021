@@ -2,22 +2,29 @@ import React, { useState } from 'react';
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
-const StatisticLine = ({text, value}) => <div>{text} {value}</div>
+const StatisticLine = ({text, value}) => {
+  return (
+      <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+      </tr>
+  )
+} 
 
 const Statistics = (props) => {
-  let totalClick = props.good + props.neutral + props.bad
-  let average = props.totalFeedback / totalClick || 0
-  let positivePercantage = (props.good / totalClick) * 100 || 0
+  const totalClick = props.good + props.neutral + props.bad
+  const average = props.totalFeedback / totalClick || 0
+  const positivePercantage = (props.good / totalClick) * 100 || 0
   if(totalClick === 0) return <div>No feedback given</div>
   return (
-    <>
+    <table>
       <StatisticLine text='good' value={props.good} />
       <StatisticLine text='neutral' value={props.neutral} />
       <StatisticLine text='bad' value={props.bad} />
       <StatisticLine text='all' value={totalClick} />
       <StatisticLine text='average' value={average} />
       <StatisticLine text='positive' value={`${positivePercantage} %`} />
-    </>
+    </table>
   )
 }
 
