@@ -3,18 +3,21 @@ import axios from 'axios'
 const App = () => {
   const [countries, setcountries] = useState([])
   const [filter, setFilter] = useState('')
+  const [view, setview] = useState(countries)
   useEffect(() => {
     axios.get('https://restcountries.eu/rest/v2/all').then((promise) => {
       setcountries(promise.data)
+      setview(promise.data)
     })
   }, [])
   const handleFilter = (e) => {
     setFilter(e.target.value)
+    setview(countries)
   }
 
   const filteredCountries = () => {
     if (filter !== '') {
-      let filtered = countries.filter(
+      let filtered = view.filter(
         (country) =>
           country.name.toLowerCase().search(filter.toLowerCase()) !== -1
       )
@@ -27,7 +30,12 @@ const App = () => {
       return []
     }
   }
-
+  const handleButton = (e) => {
+    let viewFilter = filteredCountries().filter(
+      (country) => country.name === e.target.id
+    )
+    setview(viewFilter)
+  }
   return (
     <div>
       <div>
@@ -62,9 +70,16 @@ const App = () => {
                   />
                 </div>
               ))
-            : filteredCountries().map((country) => (
-                <div key={country.name}>{country.name}</div>
-              ))
+            : filteredCountries().map((country) => {
+                return (
+                  <div key={country.name}>
+                    {country.name}
+                    <button id={country.name} onClick={handleButton}>
+                      show
+                    </button>
+                  </div>
+                )
+              })
           : ''}
       </div>
     </div>
