@@ -47,6 +47,7 @@ const App = () => {
       q: capitalCity,
     }
 
+    axios
       .get('http://api.openweathermap.org/data/2.5/weather', { params })
       .then((response) => {
         setWeather(response.data)
