@@ -1,5 +1,110 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+
+const FilteredCountries = ({ country, handleButton }) => {
+  return (
+    <div>
+      {country.name}
+      <button id={country.name} onClick={handleButton}>
+        show
+      </button>
+    </div>
+  )
+}
+
+const CountryStats = ({ country }) => {
+  const { name, capital, population, languages, flag } = country
+  return (
+    <>
+      <h1>{name}</h1>
+      <div>
+        <div>capital {capital}</div>
+        <div>population {population}</div>
+      </div>
+      <h2>Spoken languages</h2>
+      <ul>
+        {languages.map((lang) => (
+          <li key={lang.name}>{lang.name}</li>
+        ))}
+      </ul>
+      <img src={flag} alt={`flag of ${name}`} width="150px" />
+    </>
+  )
+}
+const WeatherIcons = ({ icon }) => {
+  return (
+    <>
+      {icon.map((image) => (
+        <img
+          key={image.id}
+          src={`http://openweathermap.org/img/wn/${image.icon}@2x.png`}
+          alt={image.description}
+        />
+      ))}
+    </>
+  )
+}
+
+const CountryWeather = ({ weather }) => {
+  const { name, main, wind } = weather
+  return (
+    <>
+      <h2>Weather in {name}</h2>
+      <div>
+        <p>
+          <strong>temperature:</strong> {main.temp} Celsius
+        </p>
+        <WeatherIcons icon={weather.weather} />
+        <p>
+          <strong>wind:</strong> {wind.speed} mph direction {wind.deg} deg
+        </p>
+      </div>
+    </>
+  )
+}
+
+const FullSatsOfACountry = ({ currentCountry, handleButton, weather }) => {
+  return (
+    <div>
+      {currentCountry.length <= 10
+        ? currentCountry.length === 1
+          ? currentCountry.map((country) => {
+              return (
+                <div key={country.population}>
+                  <CountryStats country={country} />
+                  <CountryWeather weather={weather} />
+                </div>
+              )
+            })
+          : currentCountry.map((country) => {
+              return (
+                <FilteredCountries
+                  key={country.name}
+                  country={country}
+                  handleButton={handleButton}
+                />
+              )
+            })
+        : ''}
+    </div>
+  )
+}
+
+const WarningText = (props) => {
+  return <div>{props.countryList.length > 10 ? `${props.text}` : ''}</div>
+}
+
+const InputButton = ({ filter, handleFilter }) => {
+  return (
+    <div>
+      <div>
+        find countries
+        <input value={filter} onChange={handleFilter} />
+      </div>
+    </div>
+  )
+}
+
 const App = () => {
   const [countries, setcountries] = useState([])
   const [filter, setFilter] = useState('')
@@ -62,70 +167,16 @@ const App = () => {
   }
   return (
     <div>
-      <div>
-        find countries
-        <input value={filter} onChange={handleFilter} />
-      </div>
-      <div>
-        {filteredCountries().length > 10
-          ? 'Too many matches, specify another filter'
-          : ''}
-      </div>
-      <div>
-        {filteredCountries().length <= 10
-          ? filteredCountries().length === 1
-            ? filteredCountries().map((country) => {
-                return (
-                  <div key={country.population}>
-                    <h1>{country.name}</h1>
-                    <div>
-                      <div>capital {country.capital}</div>
-                      <div>population {country.population}</div>
-                    </div>
-                    <h2>Spoken languages</h2>
-                    <ul>
-                      {country.languages.map((lang) => (
-                        <li key={lang.name}>{lang.name}</li>
-                      ))}
-                    </ul>
-                    <img
-                      src={country.flag}
-                      alt={`flag of ${country.name}`}
-                      width="150px"
-                    />
-                    <h2>Weather in {country.capital}</h2>
-                    <div>
-                      <p>
-                        <strong>temperature:</strong> {weather.main.temp}{' '}
-                        Celsius
-                      </p>
-                      {weather.weather.map((image) => (
-                        <img
-                          key={image.id}
-                          src={`http://openweathermap.org/img/wn/${image.icon}@2x.png`}
-                          alt={image.description}
-                        />
-                      ))}
-                      <p>
-                        <strong>wind:</strong> {weather.wind.speed} mph
-                        direction {weather.wind.deg} deg
-                      </p>
-                    </div>
-                  </div>
-                )
-              })
-            : filteredCountries().map((country) => {
-                return (
-                  <div key={country.name}>
-                    {country.name}
-                    <button id={country.name} onClick={handleButton}>
-                      show
-                    </button>
-                  </div>
-                )
-              })
-          : ''}
-      </div>
+      <InputButton filter={filter} handleFilter={handleFilter} />
+      <WarningText
+        countryList={filteredCountries()}
+        text={'Too many matches, specify another filter'}
+      />
+      <FullSatsOfACountry
+        currentCountry={filteredCountries()}
+        handleButton={handleButton}
+        weather={weather}
+      />
     </div>
   )
 }
