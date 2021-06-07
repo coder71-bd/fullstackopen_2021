@@ -38,9 +38,10 @@ const PersonForm = (props) => {
   )
 }
 
-const Persons = ({ showPerson }) => (
+const Persons = ({ showPerson, handleDelete }) => (
   <div>
     {showPerson.name} {showPerson.number}
+    <button onClick={handleDelete}>delete</button>
   </div>
 )
 
@@ -96,6 +97,15 @@ const App = () => {
       })
     }
   }
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      phoneBookService.deletePerson(id).then(() => {
+        phoneBookService.getAll().then((response) => {
+          setPersons(response)
+        })
+      })
+    }
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -110,7 +120,11 @@ const App = () => {
       />
       <h3>Numbers</h3>
       {newFilteredPerson().map((person) => (
-        <Persons showPerson={person} key={person.name} />
+        <Persons
+          showPerson={person}
+          key={person.name}
+          handleDelete={() => handleDelete(person.id, person.name)}
+        />
       ))}
     </div>
   )
