@@ -9,8 +9,10 @@ const Filter = ({ filter, handleFilter }) => {
     </p>
   )
 }
-const ErrorMessage = ({ message }) => {
-  return message === null ? null : <div className="error">{message}</div>
+const ErrorMessage = ({ message, changeClass }) => {
+  return message === null ? null : (
+    <div className={`error ${changeClass}`}>{message}</div>
+  )
 }
 const Input = (props) => {
   return (
@@ -53,6 +55,7 @@ const App = () => {
   const [newNumber, setnewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [changeClass, setChangeClass] = useState('success')
   useEffect(() => {
     phoneBookService.getAll().then((person) => setPersons(person))
   }, [])
@@ -107,6 +110,18 @@ const App = () => {
             setnewNumber('')
             setTimeout(() => setMessage(null), 3000)
           })
+          .catch(() => {
+            setChangeClass('fail')
+            setMessage(
+              `Information of ${updatedObject.name} has already been removed from the server`
+            )
+            phoneBookService
+              .getAll().then(currentData => setPersons(currentData))
+            setTimeout(() => {
+              setMessage(null)
+              setChangeClass('success')
+            }, 3000)
+          })
       }
     } else {
       const newPerson = {
@@ -127,6 +142,7 @@ const App = () => {
     if (window.confirm(`Delete ${name}?`)) {
       phoneBookService.deletePerson(id).then(() => {
         phoneBookService.getAll().then((newPersons) => setPersons(newPersons))
+        setChangeClass('delete')
         setMessage(`Deleted ${name}`)
         setnewName('')
         setnewNumber('')
@@ -138,7 +154,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <ErrorMessage message={message} />
+      <ErrorMessage message={message} changeClass={changeClass} />
       <Filter filter={filter} handleFilter={handleFilter} />
       <h3>add a new</h3>
       <PersonForm
