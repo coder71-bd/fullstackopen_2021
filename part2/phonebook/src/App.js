@@ -9,7 +9,9 @@ const Filter = ({ filter, handleFilter }) => {
     </p>
   )
 }
-
+const ErrorMessage = ({ message }) => {
+  return message === null ? null : <div className="error">{message}</div>
+}
 const Input = (props) => {
   return (
     <div>
@@ -50,7 +52,7 @@ const App = () => {
   const [newName, setnewName] = useState('')
   const [newNumber, setnewNumber] = useState('')
   const [filter, setFilter] = useState('')
-
+  const [message, setMessage] = useState(null)
   useEffect(() => {
     phoneBookService.getAll().then((person) => setPersons(person))
   }, [])
@@ -98,8 +100,12 @@ const App = () => {
                 person.id !== newNumberObject.id ? person : newNumberObject
               )
             )
+            setMessage(
+              `New number of ${updatedObject.name} is ${updatedObject.number}`
+            )
             setnewName('')
             setnewNumber('')
+            setTimeout(() => setMessage(null), 3000)
           })
       }
     } else {
@@ -110,8 +116,10 @@ const App = () => {
       }
       phoneBookService.create(newPerson).then((currentPerson) => {
         setPersons(persons.concat(currentPerson))
+        setMessage(`Added ${currentPerson.name}`)
         setnewName('')
         setnewNumber('')
+        setTimeout(() => setMessage(null), 3000)
       })
     }
   }
@@ -119,14 +127,18 @@ const App = () => {
     if (window.confirm(`Delete ${name}?`)) {
       phoneBookService.deletePerson(id).then(() => {
         phoneBookService.getAll().then((newPersons) => setPersons(newPersons))
+        setMessage(`Deleted ${name}`)
         setnewName('')
         setnewNumber('')
+        setTimeout(() => setMessage(null), 3000)
       })
     }
   }
+
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <ErrorMessage message={message} />
       <Filter filter={filter} handleFilter={handleFilter} />
       <h3>add a new</h3>
       <PersonForm
