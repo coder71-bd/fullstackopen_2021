@@ -8,10 +8,17 @@ const getAll = () => {
 const create = (newPersonObject) => {
   return axios.post(baseUrl, newPersonObject).then((response) => response.data)
 }
-const deletePerson = (id) => {
-  return axios.delete(`${baseUrl}/${id}`).then((respone) => respone)
+
+const update = (id, objectWithnewNumber) => {
+  return axios
+    .put(`${baseUrl}/${id}`, objectWithnewNumber)
+    .then((response) => response.data)
 }
 
-const phoneBookService = { getAll, create, deletePerson }
+const deletePerson = (id) => {
+  return axios.delete(`${baseUrl}/${id}`)
+}
+
+const phoneBookService = { getAll, create, deletePerson, update }
 
 export default phoneBookService

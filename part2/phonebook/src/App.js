@@ -83,7 +83,25 @@ const App = () => {
     event.preventDefault()
     const isPresent = persons.find((person) => person.name === newName)
     if (isPresent) {
-      alert(`${newName} is already added to phonebook`)
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with the new one?`
+        )
+      ) {
+        const updatedObject = { ...isPresent, number: newNumber }
+
+        phoneBookService
+          .update(isPresent.id, updatedObject)
+          .then((newNumberObject) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== newNumberObject.id ? person : newNumberObject
+              )
+            )
+            setnewName('')
+            setnewNumber('')
+          })
+      }
     } else {
       const newPerson = {
         name: newName,
@@ -100,9 +118,9 @@ const App = () => {
   const handleDelete = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
       phoneBookService.deletePerson(id).then(() => {
-        phoneBookService.getAll().then((response) => {
-          setPersons(response)
-        })
+        phoneBookService.getAll().then((newPersons) => setPersons(newPersons))
+        setnewName('')
+        setnewNumber('')
       })
     }
   }
