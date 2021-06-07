@@ -38,17 +38,11 @@ const PersonForm = (props) => {
   )
 }
 
-const Persons = ({ showPerson }) => {
-  return (
-    <div>
-      {showPerson.map((person) => (
-        <div key={person.name}>
-          {person.name} {person.number}
-        </div>
-      ))}
-    </div>
-  )
-}
+const Persons = ({ showPerson }) => (
+  <div>
+    {showPerson.name} {showPerson.number}
+  </div>
+)
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -95,11 +89,15 @@ const App = () => {
       const newPerson = {
         name: newName,
         number: newNumber,
-        date: new Date().toISOString(),
+        date: new Date(),
       }
-      setPersons(persons.concat(newPerson))
-      setnewName('')
-      setnewNumber('')
+      axios
+        .post('http://localhost:3001/persons', newPerson)
+        .then((response) => {
+          setPersons(persons.concat(newPerson))
+          setnewName('')
+          setnewNumber('')
+        })
     }
   }
   return (
@@ -115,7 +113,9 @@ const App = () => {
         handleNumber={handleNumber}
       />
       <h3>Numbers</h3>
-      <Persons showPerson={newFilteredPerson()} />
+      {newFilteredPerson().map((person) => (
+        <Persons showPerson={person} key={person.name} />
+      ))}
     </div>
   )
 }
