@@ -15,4 +15,4 @@
     - [countrydata](https://github.com/coder71-bd/fullstackopen_2021/tree/main/part2/countrydata)
     - [phonebook](https://github.com/coder71-bd/fullstackopen_2021/tree/main/part2/phonebook)
 - **Part 3: Programming a server with NodeJS and Express**
-  - [a phonebook app build and deplyed in heroku](https://github.com/coder71-bd/fullstackopen_2021/tree/main/part2)
+  - [a phonebook app build and deplyed in heroku](https://github.com/coder71-bd/fullstackopen_2021/tree/main/part3)
