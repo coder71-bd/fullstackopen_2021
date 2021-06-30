@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import phoneBookService from './services/phonebook'
 
 const Filter = ({ filter, handleFilter }) => {
@@ -116,7 +116,8 @@ const App = () => {
               `Information of ${updatedObject.name} has already been removed from the server`
             )
             phoneBookService
-              .getAll().then(currentData => setPersons(currentData))
+              .getAll()
+              .then((currentData) => setPersons(currentData))
             setTimeout(() => {
               setMessage(null)
               setChangeClass('success')
@@ -129,13 +130,24 @@ const App = () => {
         number: newNumber,
         date: new Date(),
       }
-      phoneBookService.create(newPerson).then((currentPerson) => {
-        setPersons(persons.concat(currentPerson))
-        setMessage(`Added ${currentPerson.name}`)
-        setnewName('')
-        setnewNumber('')
-        setTimeout(() => setMessage(null), 3000)
-      })
+      phoneBookService
+        .create(newPerson)
+        .then((currentPerson) => {
+          setPersons(persons.concat(currentPerson))
+          setMessage(`Added ${currentPerson.name}`)
+          setnewName('')
+          setnewNumber('')
+          setTimeout(() => setMessage(null), 3000)
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+          setChangeClass('fail')
+          setMessage(error.response.data.error)
+          setTimeout(() => {
+            setMessage(null)
+            setChangeClass('success')
+          }, 3000)
+        })
     }
   }
   const handleDelete = (id, name) => {
