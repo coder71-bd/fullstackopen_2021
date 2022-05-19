@@ -118,6 +118,21 @@ test('status 404 if title and url property is missing', async () => {
     .expect(404);
 });
 
+test('update likes of blog', async () => {
+  const update = {
+    likes: 50,
+  };
+  const response = await api.get('/api/blogs');
+  const blogsToUpdate = response.body[0];
+
+  await api.put(`/api/blogs/${blogsToUpdate.id}`).send(update);
+
+  const responseAfterUpdate = await api.get('/api/blogs');
+  const updatedBlog = responseAfterUpdate.body[0];
+
+  expect(updatedBlog.likes).toBe(50);
+});
+
 test('status 204 after successfull deletion', async () => {
   const response1 = await api.get('/api/blogs');
   const prevBlogs = response1.body;
