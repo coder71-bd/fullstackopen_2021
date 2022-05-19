@@ -76,6 +76,16 @@ test('total number of blogs in the system is increased by one', async () => {
   expect(difference).toBe(1);
 });
 
+test('blogs likes property default value will be 0', async () => {
+  const response = await api.post('/api/blogs').send({
+    title: 'blog 4',
+    author: 'any',
+    url: 'https://www.blog4.com',
+  });
+
+  expect(response.body.likes).toBe(0);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
