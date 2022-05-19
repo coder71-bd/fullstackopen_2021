@@ -7,7 +7,7 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', async (request, response) => {
   if (!request.body.title || !request.body.url) {
     response.status(404).json({
       message: 'insufficient data',
@@ -20,6 +20,14 @@ blogsRouter.post('/', async (request, response, next) => {
   const result = await blog.save();
 
   response.status(201).json(result);
+});
+
+blogsRouter.delete('/:id', async (request, response) => {
+  const { id } = request.params;
+  await Blog.deleteOne({ id });
+  response.status(204).json({
+    message: 'successfully deleted blogs',
+  });
 });
 
 module.exports = blogsRouter;

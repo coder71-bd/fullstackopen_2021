@@ -118,6 +118,27 @@ test('status 404 if title and url property is missing', async () => {
     .expect(404);
 });
 
+test('status 204 after successfull deletion', async () => {
+  const response1 = await api.get('/api/blogs');
+  const prevBlogs = response1.body;
+
+  // take one id to perform deletion
+  const blogsToDelete = prevBlogs[0];
+
+  await api.delete(`/api/blogs/${blogsToDelete.id}`).expect(204);
+
+  const response2 = await api.get('/api/blogs');
+
+  const newBlogs = response2.body;
+
+  const difference = prevBlogs.length - newBlogs.length;
+  expect(difference).toBe(1);
+
+  const titles = newBlogs.map((blog) => blog.title);
+
+  expect(titles).not.toContain(blogsToDelete.title);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
