@@ -86,6 +86,38 @@ test('blogs likes property default value will be 0', async () => {
   expect(response.body.likes).toBe(0);
 });
 
+test('status 404 if title and url property is missing', async () => {
+  // title property is missing
+  await api
+    .post('/api/blogs')
+    .send({
+      author: 'any',
+      url: 'https://www.blog5.com',
+      like: 34,
+    })
+    .expect(404);
+
+  // url property is missing
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'blog 6',
+      author: 'any',
+      like: 34,
+    })
+    .expect(404);
+
+  // both url and title property is missing
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'blog 6',
+      author: 'any',
+      like: 34,
+    })
+    .expect(404);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

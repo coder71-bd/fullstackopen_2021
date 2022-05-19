@@ -8,6 +8,13 @@ blogsRouter.get('/', async (request, response) => {
 });
 
 blogsRouter.post('/', async (request, response, next) => {
+  if (!request.body.title || !request.body.url) {
+    response.status(404).json({
+      message: 'insufficient data',
+    });
+    return;
+  }
+
   const blog = new Blog(request.body);
 
   const result = await blog.save();
