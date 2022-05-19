@@ -45,6 +45,37 @@ test('unique identifier property of the blog posts is named id', async () => {
   });
 });
 
+test('Successfully created a blog post', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'blog 3',
+      author: 'any',
+      url: 'https://www.blog3.com',
+      likes: 34,
+    })
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+});
+
+test('total number of blogs in the system is increased by one', async () => {
+  const prevBlogList = await api.get('/api/blogs');
+
+  // add the blog
+  await api.post('/api/blogs').send({
+    title: 'blog 4',
+    author: 'any',
+    url: 'https://www.blog4.com',
+    likes: 34,
+  });
+
+  const newBlogList = await api.get('/api/blogs');
+
+  const difference = newBlogList.body.length - prevBlogList.body.length;
+
+  expect(difference).toBe(1);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
