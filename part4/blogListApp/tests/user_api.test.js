@@ -6,16 +6,18 @@ const User = require('../models/users');
 
 const api = supertest(app);
 
+const saltRounds = bcrypt.genSaltSync(10);
+
 const initialDB = [
   {
     userName: '@user1',
     name: 'user one',
-    password: 'random',
+    password: bcrypt.hashSync('@iamuser1', saltRounds),
   },
   {
     userName: '@user2',
     name: 'user two',
-    password: 'random',
+    password: bcrypt.hashSync('@iamuser2', saltRounds),
   },
 ];
 

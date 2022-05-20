@@ -1,8 +1,6 @@
 const blogsRouter = require('express').Router();
-const jwt = require('jsonwebtoken');
 const Blog = require('../models/blogs');
 const User = require('../models/users');
-const config = require('../utils/config');
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {
@@ -72,7 +70,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   }
 
   if (user.id !== blogToDelete.user.toString()) {
-    response.status(201).json({
+    response.status(404).json({
       error: 'You are unauthorized to delete this blog',
     });
     return;
