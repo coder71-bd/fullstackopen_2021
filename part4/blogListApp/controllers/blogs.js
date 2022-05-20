@@ -4,14 +4,6 @@ const Blog = require('../models/blogs');
 const User = require('../models/users');
 const config = require('../utils/config');
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {
     userName: 1,
@@ -30,9 +22,7 @@ blogsRouter.post('/', async (request, response) => {
     return;
   }
 
-  const token = getTokenFrom(request);
-
-  const decodedToken = jwt.verify(token, config.JWT_SECRET);
+  const decodedToken = jwt.verify(request.token, config.JWT_SECRET);
 
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
