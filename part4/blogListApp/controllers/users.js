@@ -28,15 +28,32 @@ userRouter.post('/', async (request, response) => {
     });
     return;
   }
-  if (!name) {
-    response.status(404).json({
-      error: 'name is missing',
-    });
-    return;
-  }
   if (!password) {
     response.status(404).json({
       error: 'password is missing',
+    });
+    return;
+  }
+
+  if (userName.length < 3) {
+    response.status(404).json({
+      error: 'userName must be at least 3 characters long',
+    });
+    return;
+  }
+
+  if (password.length < 3) {
+    response.status(404).json({
+      error: 'password must be at least 3 characters long',
+    });
+    return;
+  }
+
+  const userExist = await User.find({ userName });
+
+  if (userExist.length >= 1) {
+    response.status(404).json({
+      error: 'user allready exist',
     });
     return;
   }
